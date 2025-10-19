@@ -81,7 +81,7 @@ export default function RegionalNarrative() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-light mb-4">Regional Narrative Engine</h1>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">Regional Narrative Engine</h1>
           <p className="text-xl text-gray-400 font-light">
             Transform one English press release into multiple culturally-nuanced regional narratives in under 30 seconds
           </p>
@@ -117,7 +117,7 @@ export default function RegionalNarrative() {
             className="max-w-4xl mx-auto"
           >
             <div className="glass-effect p-8 rounded-lg mb-6">
-              <h2 className="text-3xl font-light mb-6">Step 1: Source Content</h2>
+              <h2 className="text-3xl font-bold mb-6">Step 1: Source Content</h2>
 
               {/* Auto-Summarize Toggle */}
               <div className="flex items-center gap-3 mb-6">
@@ -196,7 +196,7 @@ export default function RegionalNarrative() {
             className="max-w-4xl mx-auto"
           >
             <div className="glass-effect p-8 rounded-lg mb-6">
-              <h2 className="text-3xl font-light mb-6">Step 2: Contextual Targeting</h2>
+              <h2 className="text-3xl font-bold mb-6">Step 2: Contextual Targeting</h2>
 
               {/* Region/Language Selector */}
               <div className="grid md:grid-cols-3 gap-6 mb-6">
@@ -328,7 +328,7 @@ export default function RegionalNarrative() {
             className="max-w-6xl mx-auto"
           >
             <div className="glass-effect p-8 rounded-lg">
-              <h2 className="text-3xl font-light mb-6">Step 3: Review & Refine</h2>
+              <h2 className="text-3xl font-bold mb-6">Step 3: Review & Refine</h2>
 
               {/* Side-by-Side Comparison */}
               <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -425,7 +425,7 @@ export default function RegionalNarrative() {
               className="glass-effect p-8 rounded-lg max-w-2xl w-full"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-light">Apply to Contacts</h2>
+                <h2 className="text-3xl font-bold">Apply to Contacts</h2>
                 <button
                   onClick={() => setShowEmailModal(false)}
                   className="text-gray-400 hover:text-white text-2xl"

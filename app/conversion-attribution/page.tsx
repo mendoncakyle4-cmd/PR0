@@ -49,7 +49,7 @@ export default function ConversionAttribution() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-light mb-4">Conversion Link Attribution</h1>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">Conversion Link Attribution</h1>
           <p className="text-xl text-gray-400 font-light">
             The ROI Driver: Transform PR from cost-center to profit-driver with quantifiable business impact
           </p>
@@ -63,7 +63,7 @@ export default function ConversionAttribution() {
           className="glass-effect p-6 rounded-lg mb-8"
         >
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-light">Integration Status</h2>
+            <h2 className="text-2xl font-bold">Integration Status</h2>
             <button className="px-4 py-2 bg-gray-800 rounded-sm hover:bg-gray-700 transition-colors flex items-center gap-2">
               <Settings className="w-4 h-4" />
               <span className="text-sm font-light">Manage Integrations</span>
@@ -158,7 +158,7 @@ export default function ConversionAttribution() {
           transition={{ delay: 0.4 }}
           className="glass-effect p-8 rounded-lg mb-8"
         >
-          <h2 className="text-3xl font-light mb-6">Attributed Value Trend</h2>
+          <h2 className="text-3xl font-bold mb-6">Attributed Value Trend</h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={trendData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -180,7 +180,7 @@ export default function ConversionAttribution() {
           transition={{ delay: 0.5 }}
           className="glass-effect p-8 rounded-lg mb-8"
         >
-          <h2 className="text-3xl font-light mb-6">Placement Performance</h2>
+          <h2 className="text-3xl font-bold mb-6">Placement Performance</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -220,7 +220,7 @@ export default function ConversionAttribution() {
           transition={{ delay: 0.6 }}
           className="glass-effect p-8 rounded-lg"
         >
-          <h2 className="text-3xl font-light mb-6">Conversion Rate Benchmarker</h2>
+          <h2 className="text-3xl font-bold mb-6">Conversion Rate Benchmarker</h2>
           <p className="text-gray-400 font-light mb-6">
             PR-attributed traffic converts at {avgConversionRate}% vs. site-wide average of 3.2%
           </p>
@@ -251,7 +251,7 @@ export default function ConversionAttribution() {
               animate={{ opacity: 1, scale: 1 }}
               className="glass-effect p-8 rounded-lg max-w-2xl w-full"
             >
-              <h2 className="text-3xl font-light mb-6">Create New Tracking Link</h2>
+              <h2 className="text-3xl font-bold mb-6">Create New Tracking Link</h2>
 
               <div className="space-y-6 mb-8">
                 <div>

@@ -99,7 +99,7 @@ export default function CrisisPredictor() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-light mb-4">Early Signal Crisis Predictor</h1>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">Early Signal Crisis Predictor</h1>
           <p className="text-xl text-gray-400 font-light">
             Proactive risk mitigation: Detect localized crisis sparks before national escalation
           </p>
@@ -149,7 +149,7 @@ export default function CrisisPredictor() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-light text-gray-400 mb-2">Global Risk Score</h2>
+              <h2 className="text-2xl font-bold text-gray-400 mb-2">Global Risk Score</h2>
               <p className="text-sm text-gray-500 font-light">Aggregated across all monitored clients</p>
             </div>
             <div className="text-center">
@@ -302,7 +302,7 @@ export default function CrisisPredictor() {
                   <div className={`inline-block px-4 py-2 rounded-sm text-sm font-medium mb-3 ${getRiskColor(selectedAlert.riskScore).bg} ${getRiskColor(selectedAlert.riskScore).border} border`}>
                     RISK {selectedAlert.riskScore}/100 - {getRiskLabel(selectedAlert.riskScore)}
                   </div>
-                  <h2 className="text-4xl font-light mb-2">{selectedAlert.client}</h2>
+                  <h2 className="text-4xl font-bold mb-2">{selectedAlert.client}</h2>
                   <p className="text-xl text-gray-400 font-light">{selectedAlert.topic} Crisis</p>
                 </div>
                 <button
@@ -379,7 +379,7 @@ export default function CrisisPredictor() {
 
               {/* Mitigation Suggestions */}
               <div className="mb-8">
-                <h3 className="text-2xl font-light mb-4">AI-Recommended Actions</h3>
+                <h3 className="text-2xl font-bold mb-4">AI-Recommended Actions</h3>
                 <div className="space-y-3">
                   {[
                     { priority: 1, action: "Draft localized response in Marathi addressing product quality concerns" },

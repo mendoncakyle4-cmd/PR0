@@ -66,7 +66,7 @@ export default function Home() {
             className="text-center max-w-5xl mx-auto"
           >
             <motion.h1
-              className="text-6xl md:text-8xl font-light mb-6 tracking-tight"
+              className="text-6xl md:text-8xl font-bold mb-6 tracking-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
@@ -162,7 +162,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto text-center mb-20"
           >
-            <h2 className="text-5xl md:text-6xl font-light mb-6">The Hair-on-Fire Problem</h2>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6">The Hair-on-Fire Problem</h2>
             <p className="text-xl text-gray-400 font-light leading-relaxed">
               Indian PR operates in a fragmented, multi-lingual ecosystem where proving business impact 
               is manual, relationship-dependent, and hampered by regional media diversity.
@@ -261,7 +261,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <h2 className="text-5xl md:text-6xl font-light mb-6">Four Core Components</h2>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6">Four Core Components</h2>
             <p className="text-xl text-gray-400 font-light">
               Modular AI systems designed for the Indian PR ecosystem
             </p>
@@ -341,7 +341,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="max-w-4xl mx-auto bg-gradient-to-br from-white to-gray-100 rounded-3xl p-12 shadow-2xl border border-gray-200"
           >
-            <h2 className="text-5xl md:text-6xl font-light mb-6 text-black text-center">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-black text-center">
               Ready to Transform Your PR Strategy?
             </h2>
             <p className="text-xl text-gray-700 mb-12 font-light text-center max-w-2xl mx-auto">
@@ -379,7 +379,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-5xl font-light text-center mb-4"
+            className="text-5xl font-bold text-center mb-4"
           >
             Loved by PR Professionals
           </motion.h2>

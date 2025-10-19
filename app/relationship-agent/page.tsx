@@ -110,7 +110,7 @@ export default function RelationshipAgent() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-light mb-4">Relationship-Assist Agent</h1>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">Relationship-Assist Agent</h1>
           <p className="text-xl text-gray-400 font-light">
             AI-powered journalist profiling with real-time social listening and personalized pitch timing
           </p>
@@ -123,7 +123,7 @@ export default function RelationshipAgent() {
           transition={{ delay: 0.1 }}
           className="mb-12"
         >
-          <h2 className="text-3xl font-light mb-6">Priority Nudges - Action Now</h2>
+          <h2 className="text-3xl font-bold mb-6">Priority Nudges - Action Now</h2>
           <div className="grid gap-4">
             {priorityNudges.map((nudge, index) => {
               const UrgencyIcon = getUrgencyIcon(nudge.urgency);
@@ -306,7 +306,7 @@ export default function RelationshipAgent() {
               {/* Header */}
               <div className="flex items-start justify-between mb-8">
                 <div>
-                  <h2 className="text-4xl font-light mb-2">{selectedContact.name}</h2>
+                  <h2 className="text-4xl font-bold mb-2">{selectedContact.name}</h2>
                   <p className="text-xl text-gray-400 font-light">{selectedContact.publication}</p>
                 </div>
                 <button
@@ -334,7 +334,7 @@ export default function RelationshipAgent() {
 
               {/* Contextual Evidence */}
               <div className="mb-8">
-                <h3 className="text-2xl font-light mb-4">Contextual Evidence</h3>
+                <h3 className="text-2xl font-bold mb-4">Contextual Evidence</h3>
                 <div className="space-y-4">
                   <div className="glass-effect p-4 rounded">
                     <div className="flex items-center gap-2 mb-2">
@@ -361,7 +361,7 @@ export default function RelationshipAgent() {
 
               {/* Conversion ROI Snapshot */}
               <div className="mb-8">
-                <h3 className="text-2xl font-light mb-4">Conversion ROI Snapshot</h3>
+                <h3 className="text-2xl font-bold mb-4">Conversion ROI Snapshot</h3>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="glass-effect p-4 rounded text-center">
                     <div className="text-3xl font-light mb-1">₹124K</div>
@@ -380,7 +380,7 @@ export default function RelationshipAgent() {
 
               {/* Integrated Pitch Generator */}
               <div className="mb-8">
-                <h3 className="text-2xl font-light mb-4">Generate Personalized Pitch</h3>
+                <h3 className="text-2xl font-bold mb-4">Generate Personalized Pitch</h3>
                 <div className="glass-effect p-4 rounded mb-4">
                   <p className="text-gray-400 font-light mb-4">
                     AI-generated pitch referencing recent activity:
