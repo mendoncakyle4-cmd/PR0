@@ -112,31 +112,50 @@ export default function Home() {
       <section className="py-32 bg-black relative overflow-hidden">
         {/* Animated Indian language letters background - pearl white */}
         <div className="absolute inset-0 overflow-hidden">
-          {['अ', 'आ', 'இ', 'க', 'త', 'ಕ', 'ক', 'પ', 'ਅ', 'ମ', 'ഇ', 'অ', 'ா', 'ு', 'ಾ', 'া', 'ા', 'ਾ', 'ା', 'ी', 'ं', 'ம', 'ल', 'र', 'न', 'వ', 'ನ', 'দ', 'ત', 'ਨ', 'ର'].map((letter, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-5xl md:text-6xl font-light"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                background: 'linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'brightness(1.2)',
-              }}
-              animate={{
-                opacity: [0.25, 0.8, 0.25],
-              }}
-              transition={{
-                duration: 2 + Math.random() * 3,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            >
-              {letter}
-            </motion.div>
-          ))}
+          {['अ', 'आ', 'இ', 'க', 'த', 'ಕ', 'ক', 'પ', 'ਅ', 'ମ', 'ഇ', 'অ', 'ா', 'ு', 'ಾ', 'া', 'ા', 'ਾ', 'ા', 'ी', 'ं', 'ம', 'ल', 'र', 'न', 'వ', 'ನ', 'দ', 'ત', 'ਨ', 'ର'].map((letter, i) => {
+            // Create evenly distributed grid positions
+            const cols = 8;
+            const rows = 4;
+            const col = i % cols;
+            const row = Math.floor(i / cols);
+            const baseX = (col / (cols - 1)) * 100;
+            const baseY = (row / (rows - 1)) * 100;
+            
+            // Skip center area (where text content is)
+            const isCenterArea = baseX > 20 && baseX < 80 && baseY > 15 && baseY < 65;
+            
+            // Add slight randomization within grid cell for natural feel
+            const offsetX = (Math.random() - 0.5) * 8;
+            const offsetY = (Math.random() - 0.5) * 15;
+            
+            return (
+              <motion.div
+                key={i}
+                className="absolute text-5xl md:text-6xl font-light"
+                style={{
+                  left: `${baseX + offsetX}%`,
+                  top: `${baseY + offsetY}%`,
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  filter: 'brightness(1.2)',
+                  opacity: isCenterArea ? 0 : 1,
+                  pointerEvents: 'none',
+                }}
+                animate={{
+                  opacity: isCenterArea ? 0 : [0.25, 0.8, 0.25],
+                }}
+                transition={{
+                  duration: 2 + Math.random() * 3,
+                  repeat: Infinity,
+                  delay: Math.random() * 2,
+                }}
+              >
+                {letter}
+              </motion.div>
+            );
+          })}
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <motion.div
