@@ -7,51 +7,56 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="min-h-screen">
-      {/* Hero Section - Animated Stars Background */}
-      <section className="hero-gradient min-h-screen flex items-center justify-center relative overflow-hidden">
-        {/* Animated stars in space */}
+      {/* Hero Section - Deep Space Starfield Background */}
+      <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-[#001a33] via-[#002147] to-black">
+        {/* Milky Way nebula effect */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(100)].map((_, i) => (
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-cyan-900/10 to-transparent opacity-40" />
+          
+          {/* Dense starfield */}
+          {[...Array(200)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute bg-white rounded-full"
+              className="absolute rounded-full"
               style={{
-                width: Math.random() * 3 + 1 + 'px',
-                height: Math.random() * 3 + 1 + 'px',
+                width: Math.random() * 2 + 0.5 + 'px',
+                height: Math.random() * 2 + 0.5 + 'px',
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
+                backgroundColor: i % 5 === 0 ? '#60a5fa' : i % 7 === 0 ? '#93c5fd' : '#ffffff',
+                boxShadow: i % 3 === 0 ? '0 0 4px rgba(96, 165, 250, 0.8)' : 'none',
               }}
               animate={{
-                opacity: [0, 1, 0],
-                scale: [0.5, 1.2, 0.5],
-                y: [0, -30, 0],
+                opacity: [0.2, 1, 0.2],
+                scale: [0.8, 1.3, 0.8],
               }}
               transition={{
-                duration: 3 + Math.random() * 4,
+                duration: 2 + Math.random() * 4,
                 repeat: Infinity,
                 delay: Math.random() * 3,
                 ease: "easeInOut",
               }}
             />
           ))}
+          
           {/* Shooting stars */}
-          {[...Array(5)].map((_, i) => (
+          {[...Array(3)].map((_, i) => (
             <motion.div
               key={`shooting-${i}`}
-              className="absolute h-px bg-gradient-to-r from-transparent via-white to-transparent"
+              className="absolute h-px bg-gradient-to-r from-transparent via-blue-300 to-transparent"
               style={{
-                width: '100px',
-                left: '-100px',
-                top: `${Math.random() * 100}%`,
+                width: '150px',
+                left: '-150px',
+                top: `${20 + Math.random() * 60}%`,
               }}
               animate={{
                 x: ['0vw', '120vw'],
-                opacity: [0, 1, 0],
+                opacity: [0, 0.8, 0],
               }}
               transition={{
-                duration: 2,
+                duration: 3,
                 repeat: Infinity,
-                delay: i * 4,
+                delay: i * 6,
                 ease: "linear",
               }}
             />
@@ -129,20 +134,24 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Core Problem Section - Flickering Indian Language Letters */}
+      {/* Core Problem Section - Flickering Pearl White Letters */}
       <section className="py-32 bg-black relative overflow-hidden">
-        {/* Animated Indian language letters background */}
-        <div className="absolute inset-0 overflow-hidden opacity-20">
+        {/* Animated Indian language letters background - pearl white */}
+        <div className="absolute inset-0 overflow-hidden opacity-15">
           {['अ', 'आ', 'க', 'త', 'ಕ', 'ক', 'પ', 'ਅ', 'ମ', 'अ', 'ா', 'ు', 'ಾ', 'া', 'ા', 'ਾ', 'ା'].map((letter, i) => (
             <motion.div
               key={i}
-              className="absolute text-white text-4xl font-light"
+              className="absolute text-4xl md:text-5xl font-light"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
+                background: 'linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
               animate={{
-                opacity: [0.1, 0.6, 0.1],
+                opacity: [0.15, 0.7, 0.15],
               }}
               transition={{
                 duration: 2 + Math.random() * 3,
@@ -214,39 +223,88 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Preview Section - Rotating Cogs Background */}
+      {/* Features Preview Section - Pearl White Realistic Gears */}
       <section id="core-components" className="py-32 bg-gradient-to-b from-black to-zinc-900 relative overflow-hidden">
-        {/* Animated cogs and machinery */}
-        <div className="absolute inset-0 overflow-hidden opacity-10">
-          {[...Array(8)].map((_, i) => (
+        {/* Animated realistic pearl white gears */}
+        <div className="absolute inset-0 overflow-hidden opacity-8">
+          {/* Large center gear */}
+          <motion.div
+            className="absolute rounded-full"
+            style={{
+              width: '180px',
+              height: '180px',
+              left: '50%',
+              top: '40%',
+              transform: 'translate(-50%, -50%)',
+              background: 'radial-gradient(circle at 30% 30%, #ffffff, #e5e7eb)',
+              boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.2), 0 4px 12px rgba(255,255,255,0.1)',
+              border: '3px solid rgba(255,255,255,0.3)',
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          >
+            {/* Center hub */}
+            <div className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 shadow-inner" />
+            {/* Gear teeth */}
+            {[...Array(12)].map((_, j) => (
+              <div
+                key={j}
+                className="absolute bg-gradient-to-br from-white to-gray-200"
+                style={{
+                  width: '20px',
+                  height: '30px',
+                  left: '50%',
+                  top: '-15px',
+                  transform: `translateX(-50%) rotate(${j * 30}deg)`,
+                  transformOrigin: 'center 105px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                }}
+              />
+            ))}
+          </motion.div>
+
+          {/* Smaller gears positioned around */}
+          {[
+            { size: 100, x: '15%', y: '25%', teeth: 10, duration: 15, reverse: true },
+            { size: 120, x: '80%', y: '30%', teeth: 12, duration: 18, reverse: false },
+            { size: 80, x: '25%', y: '65%', teeth: 8, duration: 12, reverse: false },
+            { size: 90, x: '75%', y: '70%', teeth: 10, duration: 14, reverse: true },
+            { size: 70, x: '10%', y: '55%', teeth: 8, duration: 10, reverse: false },
+            { size: 85, x: '88%', y: '60%', teeth: 9, duration: 13, reverse: true },
+          ].map((gear, i) => (
             <motion.div
               key={i}
-              className="absolute border-4 border-white rounded-full"
+              className="absolute rounded-full"
               style={{
-                width: `${100 + i * 40}px`,
-                height: `${100 + i * 40}px`,
-                left: `${20 + (i % 3) * 30}%`,
-                top: `${10 + Math.floor(i / 3) * 30}%`,
+                width: `${gear.size}px`,
+                height: `${gear.size}px`,
+                left: gear.x,
+                top: gear.y,
+                transform: 'translate(-50%, -50%)',
+                background: 'radial-gradient(circle at 30% 30%, #ffffff, #e5e7eb)',
+                boxShadow: 'inset 0 1px 6px rgba(0,0,0,0.15), 0 2px 8px rgba(255,255,255,0.1)',
+                border: '2px solid rgba(255,255,255,0.3)',
               }}
-              animate={{
-                rotate: i % 2 === 0 ? 360 : -360,
-              }}
-              transition={{
-                duration: 10 + i * 2,
-                repeat: Infinity,
-                ease: "linear",
-              }}
+              animate={{ rotate: gear.reverse ? -360 : 360 }}
+              transition={{ duration: gear.duration, repeat: Infinity, ease: "linear" }}
             >
-              {/* Cog teeth */}
-              {[...Array(8)].map((_, j) => (
+              {/* Center hub */}
+              <div className="absolute inset-0 m-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-300 shadow-inner"
+                style={{ width: `${gear.size * 0.3}px`, height: `${gear.size * 0.3}px` }}
+              />
+              {/* Gear teeth */}
+              {[...Array(gear.teeth)].map((_, j) => (
                 <div
                   key={j}
-                  className="absolute w-2 h-4 bg-white"
+                  className="absolute bg-gradient-to-br from-white to-gray-200"
                   style={{
+                    width: `${gear.size * 0.18}px`,
+                    height: `${gear.size * 0.28}px`,
                     left: '50%',
-                    top: '-2px',
-                    transform: `translateX(-50%) rotate(${j * 45}deg)`,
-                    transformOrigin: `center ${50 + i * 20}px`,
+                    top: `${-gear.size * 0.14}px`,
+                    transform: `translateX(-50%) rotate(${j * (360 / gear.teeth)}deg)`,
+                    transformOrigin: `center ${gear.size / 2}px`,
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
                   }}
                 />
               ))}
