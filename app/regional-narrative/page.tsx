@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Upload, FileText, Sparkles, Copy, Check, RefreshCw, Send } from "lucide-react";
+import { Upload, FileText, Sparkles, Copy, Check, RefreshCw, Send, Mail, Users } from "lucide-react";
 
 export default function RegionalNarrative() {
   const [step, setStep] = useState(1);
@@ -16,6 +16,10 @@ export default function RegionalNarrative() {
   const [generatedText, setGeneratedText] = useState("");
   const [copied, setCopied] = useState(false);
   const [autoSummarize, setAutoSummarize] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [extractedEmails, setExtractedEmails] = useState<string[]>([]);
 
   const regions = [
     { value: "mumbai", label: "Mumbai", language: "Marathi" },
@@ -46,6 +50,26 @@ export default function RegionalNarrative() {
     navigator.clipboard.writeText(generatedText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+      // Simulate email extraction
+      setExtractedEmails([
+        "editor@thehindu.com",
+        "news@economictimes.com",
+        "media@timesgroup.com",
+        "contact@mint.com",
+      ]);
+    }
+  };
+
+  const handleSendEmails = () => {
+    // This would integrate with email service
+    alert(`Sending to ${extractedEmails.length} contacts with subject: "${emailSubject}"`);
+    setShowEmailModal(false);
   };
 
   return (
@@ -359,6 +383,13 @@ export default function RegionalNarrative() {
                   {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                   {copied ? "Copied!" : "Copy to Clipboard"}
                 </button>
+                <button 
+                  onClick={() => setShowEmailModal(true)}
+                  className="flex-1 py-4 bg-blue-600 text-white font-medium rounded-sm hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
+                >
+                  <Mail className="w-5 h-5" />
+                  Apply to Contacts
+                </button>
                 <button className="flex-1 py-4 bg-white text-black font-medium rounded-sm hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
                   <Send className="w-5 h-5" />
                   Pitch Ready
@@ -383,6 +414,122 @@ export default function RegionalNarrative() {
               </div>
             </div>
           </motion.div>
+        )}
+
+        {/* Email Modal */}
+        {showEmailModal && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="glass-effect p-8 rounded-lg max-w-2xl w-full"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-light">Apply to Contacts</h2>
+                <button
+                  onClick={() => setShowEmailModal(false)}
+                  className="text-gray-400 hover:text-white text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Upload Section */}
+              <div className="mb-6">
+                <label className="block text-sm text-gray-400 mb-3 font-light">
+                  Upload Contact List (Excel/Google Sheets)
+                </label>
+                <div className="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center hover:border-gray-500 transition-colors">
+                  <input
+                    type="file"
+                    accept=".xlsx,.xls,.csv"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer flex flex-col items-center gap-3"
+                  >
+                    <Upload className="w-12 h-12 text-gray-400" />
+                    <div>
+                      <p className="text-white font-light mb-1">
+                        {uploadedFile ? uploadedFile.name : "Click to upload or drag and drop"}
+                      </p>
+                      <p className="text-sm text-gray-500 font-light">
+                        Excel (.xlsx, .xls) or CSV files
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Extracted Emails */}
+              {extractedEmails.length > 0 && (
+                <div className="mb-6">
+                  <label className="block text-sm text-gray-400 mb-3 font-light flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    Extracted Email Addresses ({extractedEmails.length})
+                  </label>
+                  <div className="bg-black border border-gray-700 rounded p-4 max-h-40 overflow-y-auto">
+                    {extractedEmails.map((email, i) => (
+                      <div key={i} className="text-sm text-gray-300 font-light py-1">
+                        {email}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Email Subject */}
+              <div className="mb-6">
+                <label className="block text-sm text-gray-400 mb-2 font-light">
+                  Email Subject *
+                </label>
+                <input
+                  type="text"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  placeholder="e.g., Exclusive: New Product Launch in Regional Markets"
+                  className="w-full bg-black border border-gray-700 rounded p-3 text-white font-light focus:border-white focus:outline-none"
+                />
+              </div>
+
+              {/* Email Preview */}
+              <div className="mb-6">
+                <label className="block text-sm text-gray-400 mb-2 font-light">
+                  Email Body Preview
+                </label>
+                <div className="bg-black border border-gray-700 rounded p-4 max-h-60 overflow-y-auto">
+                  <p className="text-white font-light text-sm whitespace-pre-wrap">
+                    {generatedText || "Your generated narrative will appear here..."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setShowEmailModal(false)}
+                  className="flex-1 py-3 border border-white text-white font-light rounded-sm hover:bg-white hover:text-black transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSendEmails}
+                  disabled={!emailSubject || extractedEmails.length === 0}
+                  className="flex-1 py-3 bg-white text-black font-medium rounded-sm hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <Send className="w-5 h-5" />
+                  Send to {extractedEmails.length} Contacts
+                </button>
+              </div>
+
+              <p className="text-xs text-gray-500 text-center mt-4 font-light">
+                Emails will be sent via your connected email service (Gmail, Outlook, SendGrid)
+              </p>
+            </motion.div>
+          </div>
         )}
       </div>
     </main>
