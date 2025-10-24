@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Upload, FileText, Sparkles, Copy, Check, RefreshCw, Send, Mail, Users } from "lucide-react";
+import { Upload, FileText, Sparkles, Copy, Check, RefreshCw, Send, Mail, Users, Globe, Languages } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function RegionalNarrative() {
   const [step, setStep] = useState(1);
@@ -20,15 +21,82 @@ export default function RegionalNarrative() {
   const [emailSubject, setEmailSubject] = useState("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [extractedEmails, setExtractedEmails] = useState<string[]>([]);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translationProgress, setTranslationProgress] = useState(0);
+  
+  // Initialize translation hook
+  const { translate: translateText, isTranslating: isTranslationInProgress } = useTranslation();
+  
+  // Available languages for translation
+  const supportedLanguages = [
+    { code: 'hi', name: 'Hindi' },
+    { code: 'bn', name: 'Bengali' },
+    { code: 'ta', name: 'Tamil' },
+    { code: 'te', name: 'Telugu' },
+    { code: 'kn', name: 'Kannada' },
+    { code: 'ml', name: 'Malayalam' },
+    { code: 'mr', name: 'Marathi' },
+    { code: 'gu', name: 'Gujarati' },
+    { code: 'pa', name: 'Punjabi' },
+    { code: 'or', name: 'Odia' },
+    { code: 'as', name: 'Assamese' },
+  ];
+  
+  // Handle translation
+  const handleTranslate = useCallback(async (text: string, targetLang: string) => {
+    if (!text || !targetLang) return text;
+    
+    try {
+      setIsTranslating(true);
+      setTranslationProgress(30);
+      
+      const translatedText = await translateText(text, 'en', targetLang);
+      
+      setTranslationProgress(100);
+      setTimeout(() => setTranslationProgress(0), 500);
+      
+      return translatedText || text; // Return original if translation fails
+    } catch (error) {
+      console.error('Translation error:', error);
+      return text; // Return original text on error
+    } finally {
+      setIsTranslating(false);
+    }
+  }, [translateText]);
+  
+  // Auto-translate generated text when language changes
+  useEffect(() => {
+    if (generatedText && selectedLanguage && selectedLanguage !== 'en') {
+      const translateContent = async () => {
+        const translated = await handleTranslate(generatedText, selectedLanguage);
+        setGeneratedText(translated);
+      };
+      
+      translateContent();
+    }
+  }, [selectedLanguage, generatedText, handleTranslate]);
 
   const regions = [
-    { value: "mumbai", label: "Mumbai", language: "Marathi" },
-    { value: "delhi", label: "Delhi", language: "Hindi" },
-    { value: "chennai", label: "Chennai", language: "Tamil" },
-    { value: "bangalore", label: "Bangalore", language: "Kannada" },
-    { value: "kolkata", label: "Kolkata", language: "Bengali" },
-    { value: "hyderabad", label: "Hyderabad", language: "Telugu" },
+    { name: "North India", languages: ['hi', 'pa', 'ur'] },
+    { name: "South India", languages: ['ta', 'te', 'kn', 'ml'] },
+    { name: "East India", languages: ['bn', 'or', 'as'] },
+    { name: "West India", languages: ['mr', 'gu'] },
+    { name: "North East India", languages: ['as', 'mni'] }
   ];
+  
+  // Update selected region's available languages
+  const availableLanguages = selectedRegion 
+    ? supportedLanguages.filter(lang => 
+        regions.find(r => r.name === selectedRegion)?.languages.includes(lang.code)
+      )
+    : [];
+    
+  // Handle region change
+  const handleRegionChange = (region: string) => {
+    setSelectedRegion(region);
+    // Reset language when region changes
+    setSelectedLanguage('');
+  };
 
   const mediaTypes = ["Financial Daily", "Tech Blog", "Consumer Magazine", "Policy Journal", "Lifestyle Publication"];
   const tonePresets = [
@@ -198,54 +266,93 @@ export default function RegionalNarrative() {
             <div className="glass-effect p-8 rounded-lg mb-6">
               <h2 className="text-3xl font-bold mb-6">Step 2: Contextual Targeting</h2>
 
-              {/* Region/Language Selector */}
-              <div className="grid md:grid-cols-3 gap-6 mb-6">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2 font-light">Region</label>
-                  <select
-                    value={selectedRegion}
-                    onChange={(e) => {
-                      setSelectedRegion(e.target.value);
-                      const region = regions.find((r) => r.value === e.target.value);
-                      if (region) setSelectedLanguage(region.language);
-                    }}
-                    className="w-full bg-black border border-gray-700 rounded p-3 text-white font-light focus:border-white focus:outline-none"
-                  >
-                    <option value="">Select Region</option>
-                    {regions.map((region) => (
-                      <option key={region.value} value={region.value}>
-                        {region.label}
-                      </option>
-                    ))}
-                  </select>
+              {/* Tonal Presets */}
+              <div className="mb-8">
+                <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                  <Globe className="w-5 h-5" />
+                  Select Target Region
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {regions.map((region) => (
+                    <button
+                      key={region.name}
+                      onClick={() => handleRegionChange(region.name)}
+                      className={`px-4 py-3 rounded-md border flex flex-col items-center ${
+                        selectedRegion === region.name
+                          ? "border-blue-500 bg-blue-500/10 text-blue-500"
+                          : "border-gray-700 hover:border-gray-600"
+                      } transition-colors`}
+                    >
+                      <span>{region.name}</span>
+                      <span className="text-xs text-gray-400 mt-1">
+                        {region.languages.length} languages
+                      </span>
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2 font-light">Language</label>
-                  <input
-                    type="text"
-                    value={selectedLanguage}
-                    readOnly
-                    className="w-full bg-gray-900 border border-gray-700 rounded p-3 text-gray-400 font-light cursor-not-allowed"
-                    placeholder="Auto-selected"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2 font-light">Media Type</label>
-                  <select
-                    value={selectedMediaType}
-                    onChange={(e) => setSelectedMediaType(e.target.value)}
-                    className="w-full bg-black border border-gray-700 rounded p-3 text-white font-light focus:border-white focus:outline-none"
-                  >
-                    <option value="">Select Type</option>
-                    {mediaTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
+              <div className="mb-8">
+                <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                  <Languages className="w-5 h-5" />
+                  Select Language
+                </h3>
+                {!selectedRegion ? (
+                  <div className="text-gray-400 text-sm py-4">
+                    Please select a region first to see available languages
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {availableLanguages.map((language) => (
+                      <button
+                        key={language.code}
+                        onClick={() => setSelectedLanguage(language.code)}
+                        className={`px-4 py-2 rounded-md border flex items-center justify-center gap-2 ${
+                          selectedLanguage === language.code
+                            ? "border-blue-500 bg-blue-500/10 text-blue-500"
+                            : "border-gray-700 hover:border-gray-600"
+                        } transition-colors`}
+                      >
+                        {language.name}
+                        {isTranslating && selectedLanguage === language.code && (
+                          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                        )}
+                      </button>
                     ))}
-                  </select>
-                </div>
+                  </div>
+                )}
+                
+                {/* Translation progress bar */}
+                {isTranslating && (
+                  <div className="mt-4">
+                    <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-blue-500 transition-all duration-300"
+                        style={{ width: `${translationProgress}%` }}
+                      ></div>
+                    </div>
+                    <div className="text-xs text-gray-400 mt-1 text-right">
+                      Translating content...
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Media Type */}
+              <div className="mb-6">
+                <label className="block text-sm text-gray-400 mb-2 font-light">Media Type</label>
+                <select
+                  value={selectedMediaType}
+                  onChange={(e) => setSelectedMediaType(e.target.value)}
+                  className="w-full bg-black border border-gray-700 rounded p-3 text-white font-light focus:border-white focus:outline-none"
+                >
+                  <option value="">Select Type</option>
+                  {mediaTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Tonal Presets */}
