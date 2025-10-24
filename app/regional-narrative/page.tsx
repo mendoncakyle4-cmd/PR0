@@ -8,12 +8,11 @@ import { useTranslation } from "@/hooks/useTranslation";
 export default function RegionalNarrative() {
   const [step, setStep] = useState(1);
   const [sourceText, setSourceText] = useState("");
-  const [coreThesis, setCoreThesis] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedMediaType, setSelectedMediaType] = useState("");
   const [tonePreset, setTonePreset] = useState("formal");
-  const [wordCount, setWordCount] = useState(250);
+  const [wordCount, setWordCount] = useState(500);
   const [generatedText, setGeneratedText] = useState("");
   const [copied, setCopied] = useState(false);
   const [autoSummarize, setAutoSummarize] = useState(false);
@@ -109,7 +108,7 @@ export default function RegionalNarrative() {
   const handleGenerate = () => {
     // Simulate AI generation
     setGeneratedText(
-      `मुंबई में नया फिनटेक क्रांति: ${coreThesis}\n\nप्रमुख बिंदु:\n• क्षेत्रीय बाजार में महत्वपूर्ण प्रगति\n• स्थानीय उद्यमियों के लिए नए अवसर\n• डिजिटल भुगतान में वृद्धि\n\n[AI-generated culturally-nuanced narrative in ${selectedLanguage} for ${selectedMediaType}]`
+      `मुंबई में नया फिनटेक क्रांति\n\nप्रमुख बिंदु:\n• क्षेत्रीय बाजार में महत्वपूर्ण प्रगति\n• स्थानीय उद्यमियों के लिए नए अवसर\n• डिजिटल भुगतान में वृद्धि\n\n[AI-generated culturally-nuanced narrative in ${selectedLanguage} for ${selectedMediaType} - ${wordCount} words]`
     );
     setStep(3);
   };
@@ -228,26 +227,10 @@ export default function RegionalNarrative() {
                 </div>
               </div>
 
-              {/* Core Thesis */}
-              <div className="mb-8">
-                <label className="block text-sm text-gray-400 mb-2 font-light">
-                  Core Thesis (Required) *
-                </label>
-                <input
-                  type="text"
-                  value={coreThesis}
-                  onChange={(e) => setCoreThesis(e.target.value)}
-                  placeholder="The single most important truth of this story..."
-                  className="w-full bg-black border-2 border-yellow-600 rounded p-4 text-white font-light focus:border-yellow-400 focus:outline-none transition-colors"
-                />
-                <p className="text-xs text-gray-500 mt-2 font-light">
-                  This anchors all regional adaptations to ensure message consistency
-                </p>
-              </div>
 
               <button
                 onClick={() => setStep(2)}
-                disabled={!sourceText || !coreThesis}
+                disabled={!sourceText}
                 className="w-full py-4 bg-white text-black font-medium rounded-sm hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next: Contextual Targeting
@@ -384,28 +367,44 @@ export default function RegionalNarrative() {
                   <input
                     type="range"
                     min="100"
-                    max="500"
+                    max="1000"
                     step="50"
                     value={wordCount}
                     onChange={(e) => setWordCount(parseInt(e.target.value))}
                     className="flex-1"
                   />
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <button
                       onClick={() => setWordCount(100)}
-                      className="px-4 py-2 bg-gray-800 rounded text-sm font-light hover:bg-gray-700"
+                      className="px-3 py-1.5 text-xs bg-gray-800 rounded hover:bg-gray-700"
                     >
-                      Short
+                      Short (100)
                     </button>
                     <button
                       onClick={() => setWordCount(250)}
-                      className="px-4 py-2 bg-gray-800 rounded text-sm font-light hover:bg-gray-700"
+                      className="px-3 py-1.5 text-xs bg-gray-800 rounded hover:bg-gray-700"
                     >
-                      Medium
+                      Medium (250)
+                    </button>
+                    <button
+                      onClick={() => setWordCount(500)}
+                      className="px-3 py-1.5 text-xs bg-gray-800 rounded hover:bg-gray-700"
+                    >
+                      Long (500)
+                    </button>
+                    <button
+                      onClick={() => setWordCount(750)}
+                      className="px-3 py-1.5 text-xs bg-gray-800 rounded hover:bg-gray-700"
+                    >
+                      Extended (750)
+                    </button>
+                    <button
+                      onClick={() => setWordCount(1000)}
+                      className="px-3 py-1.5 text-xs bg-gray-800 rounded hover:bg-gray-700"
+                    >
+                      Comprehensive (1000)
                     </button>
                   </div>
-                </div>
-              </div>
 
               <div className="flex gap-4">
                 <button
