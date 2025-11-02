@@ -83,21 +83,32 @@ Response:
 
 ## Supported Languages
 
-- English (en)
-- Hindi (hi)
-- Bengali (bn)
-- Tamil (ta)
-- Telugu (te)
-- Kannada (kn)
-- Malayalam (ml)
-- Marathi (mr)
-- Gujarati (gu)
-- Punjabi (pa)
-- Odia (or)
-- Assamese (as)
-- Urdu (ur)
-- Nepali (ne)
-- Sanskrit (sa)
+The following languages are supported and aligned between frontend and backend:
+
+- **English** (en)
+- **Hindi** (hi)
+- **Bengali** (bn)
+- **Tamil** (ta)
+- **Telugu** (te)
+- **Kannada** (kn)
+- **Malayalam** (ml)
+- **Marathi** (mr)
+- **Gujarati** (gu)
+- **Punjabi** (pa)
+- **Odia** (or)
+- **Assamese** (as)
+- **Urdu** (ur)
+- **Nepali** (ne)
+- **Sanskrit** (sa)
+- **Manipuri** (mni)
+
+Additional languages supported by IndicTrans2 backend (available for future use):
+- Kashmiri (ks)
+- Dogri (doi)
+- Konkani (kok)
+- Maithili (mai)
+- Bodo (brx)
+- Santali (sat)
 
 ## Integration with Next.js
 

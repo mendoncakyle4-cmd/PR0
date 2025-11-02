@@ -26,7 +26,7 @@ export default function RegionalNarrative() {
   // Initialize translation hook
   const { translate: translateText, isTranslating: isTranslationInProgress } = useTranslation();
   
-  // Available languages for translation
+  // Available languages for translation (aligned with IndicTrans2 backend support)
   const supportedLanguages = [
     { code: 'hi', name: 'Hindi' },
     { code: 'bn', name: 'Bengali' },
@@ -39,6 +39,10 @@ export default function RegionalNarrative() {
     { code: 'pa', name: 'Punjabi' },
     { code: 'or', name: 'Odia' },
     { code: 'as', name: 'Assamese' },
+    { code: 'ur', name: 'Urdu' },
+    { code: 'ne', name: 'Nepali' },
+    { code: 'sa', name: 'Sanskrit' },
+    { code: 'mni', name: 'Manipuri' },
   ];
   
   // Handle translation
@@ -76,7 +80,7 @@ export default function RegionalNarrative() {
   }, [selectedLanguage, generatedText, handleTranslate]);
 
   const regions = [
-    { name: "North India", languages: ['hi', 'pa', 'ur'] },
+    { name: "North India", languages: ['hi', 'pa', 'ur', 'ne'] },
     { name: "South India", languages: ['ta', 'te', 'kn', 'ml'] },
     { name: "East India", languages: ['bn', 'or', 'as'] },
     { name: "West India", languages: ['mr', 'gu'] },

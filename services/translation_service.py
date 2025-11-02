@@ -169,6 +169,7 @@ class TranslationService:
                 logger.info(f"Initializing IndicTrans2 model from {model_dir}")
                 
                 # Language code mapping (IndicTrans2 uses specific codes)
+                # Mapping from ISO 639-1 codes to IndicTrans2 language_script format
                 self.lang_map = {
                     'en': 'eng_Latn',
                     'hi': 'hin_Deva',
@@ -183,8 +184,15 @@ class TranslationService:
                     'or': 'ory_Orya',
                     'as': 'asm_Beng',
                     'ur': 'urd_Arab',
-                    'ne': 'nep_Deva',
-                    'sa': 'san_Deva',
+                    'ne': 'nep_Deva',  # Nepali
+                    'sa': 'san_Deva',  # Sanskrit
+                    'mni': 'mni_Beng',  # Manipuri (Meitei/Bengali script)
+                    'ks': 'kas_Arab',  # Kashmiri (Arabic script)
+                    'doi': 'doi_Deva',  # Dogri
+                    'kok': 'gom_Deva',  # Konkani
+                    'mai': 'mai_Deva',  # Maithili
+                    'brx': 'brx_Deva',  # Bodo
+                    'sat': 'sat_Olck',  # Santali
                 }
                 
                 # Initialize the model (lazy loading - will load on first translation)
@@ -363,8 +371,13 @@ class TranslationService:
         
         try:
             # Map language codes to IndicTrans2 format
-            src_code = self.lang_map.get(src_lang, src_lang)
-            tgt_code = self.lang_map.get(tgt_lang, tgt_lang)
+            if src_lang not in self.lang_map:
+                raise TranslationError(f"Source language '{src_lang}' is not supported. Supported languages: {', '.join(self.lang_map.keys())}")
+            if tgt_lang not in self.lang_map:
+                raise TranslationError(f"Target language '{tgt_lang}' is not supported. Supported languages: {', '.join(self.lang_map.keys())}")
+            
+            src_code = self.lang_map[src_lang]
+            tgt_code = self.lang_map[tgt_lang]
             
             # Use IndicTrans2 API if available
             if hasattr(self, 'use_indictrans2_api') and self.use_indictrans2_api:
