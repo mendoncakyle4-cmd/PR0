@@ -53,7 +53,7 @@ export default function RegionalNarrative() {
       setIsTranslating(true);
       setTranslationProgress(30);
       
-      const translatedText = await translateText(text, 'en', targetLang);
+      const translatedText = await translateText(text, 'en' as const, targetLang as any);
       
       setTranslationProgress(100);
       setTimeout(() => setTranslationProgress(0), 500);
@@ -410,6 +410,7 @@ export default function RegionalNarrative() {
                     </button>
                   </div>
                 </div>
+              </div>
 
               <div className="flex gap-4">
                 <button
