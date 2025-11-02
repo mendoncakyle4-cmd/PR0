@@ -12,7 +12,7 @@ export default function RegionalNarrative() {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedMediaType, setSelectedMediaType] = useState("");
   const [tonePreset, setTonePreset] = useState("formal");
-  const [wordCount, setWordCount] = useState(500);
+  const [wordCount, setWordCount] = useState(250);
   const [generatedText, setGeneratedText] = useState("");
   const [copied, setCopied] = useState(false);
   const [autoSummarize, setAutoSummarize] = useState(false);
@@ -361,7 +361,7 @@ export default function RegionalNarrative() {
               {/* Word Count */}
               <div className="mb-8">
                 <label className="block text-sm text-gray-400 mb-3 font-light">
-                  Target Word Count: {wordCount} words
+                  Target Word Count: {wordCount} words (excluding spaces)
                 </label>
                 <div className="flex gap-4 items-center">
                   <input
@@ -405,6 +405,7 @@ export default function RegionalNarrative() {
                       Comprehensive (1000)
                     </button>
                   </div>
+                </div>
 
               <div className="flex gap-4">
                 <button

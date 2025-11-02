@@ -48,6 +48,10 @@ python -m indicnlp.download
 
 # Install IndicTrans2
 echo -e "\n[5/6] Installing IndicTrans2..."
+if [ ! -d "IndicTrans2" ]; then
+    echo "Cloning IndicTrans2 repository..."
+    git clone https://github.com/AI4Bharat/IndicTrans2.git
+fi
 cd IndicTrans2
 pip install -e .
 cd ..

@@ -22,7 +22,7 @@ C:\Users\mendo\PRPulse\chorus-bot\
 
 ### 2. Regional Narrative Engine
 **3-Step Workflow:**
-- **Step 1**: Source content ingestion with auto-summarize toggle and core thesis lock-in
+- **Step 1**: Source content ingestion with auto-summarize toggle
 - **Step 2**: Contextual targeting (Region → Language → Media Type, Tone presets, Word count)
 - **Step 3**: Side-by-side comparison with refinement prompt and feedback loop
 
