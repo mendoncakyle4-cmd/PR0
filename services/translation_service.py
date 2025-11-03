@@ -123,105 +123,55 @@ class TranslationService:
         threading.Thread(target=_load_model, daemon=True).start()
     
     def _initialize_model(self):
-        """Initialize the translation model and related components using IndicTrans2."""
+        """Initialize the translation model using Hugging Face Transformers pipeline."""
         try:
-            logger.info("Initializing IndicTrans2 translation model...")
+            logger.info("Initializing HF Transformers translation model (ai4bharat/indictrans2-en-indic-1B)...")
             start_time = time.time()
-            
-            # Import IndicTrans2
-            import sys
-            import os
-            
-            # Add IndicTrans2 to path if it exists
-            indictrans2_path = Path(__file__).parent.parent / "IndicTrans2"
-            if indictrans2_path.exists():
-                sys.path.insert(0, str(indictrans2_path))
-            
-            try:
-                # Try to import IndicTrans2 components
-                from inference.engine import Model
-                from inference.transliterate import XlitEngine
-            except ImportError:
-                # Fallback: try to use IndicTrans2 directly if installed
-                try:
-                    from indictrans2.inference import Translator
-                    self.translator = Translator()
-                    self.use_indictrans2_api = True
-                except ImportError:
-                    logger.warning("IndicTrans2 not found. Please install it from https://github.com/AI4Bharat/IndicTrans2")
-                    raise ModelLoadError("IndicTrans2 library not found. Please install it first.")
-            
-            # Set up model directory
-            model_dir = self.model_dir
-            if not model_dir.exists():
-                # Try alternative paths
-                alt_path = Path(__file__).parent.parent / "models" / "indic-en"
-                if alt_path.exists():
-                    model_dir = alt_path
-                else:
-                    logger.warning(f"Model directory not found at {self.model_dir}. Using IndicTrans2 default paths.")
-            
-            # Initialize IndicTrans2 translator
-            if hasattr(self, 'translator'):
-                logger.info("Using IndicTrans2 API")
-            else:
-                # Initialize using IndicTrans2 inference engine
-                logger.info(f"Initializing IndicTrans2 model from {model_dir}")
-                
-                # Language code mapping (IndicTrans2 uses specific codes)
-                # Mapping from ISO 639-1 codes to IndicTrans2 language_script format
-                self.lang_map = {
-                    'en': 'eng_Latn',
-                    'hi': 'hin_Deva',
-                    'bn': 'ben_Beng',
-                    'ta': 'tam_Taml',
-                    'te': 'tel_Telu',
-                    'kn': 'kan_Knda',
-                    'ml': 'mal_Mlym',
-                    'mr': 'mar_Deva',
-                    'gu': 'guj_Gujr',
-                    'pa': 'pan_Guru',
-                    'or': 'ory_Orya',
-                    'as': 'asm_Beng',
-                    'ur': 'urd_Arab',
-                    'ne': 'nep_Deva',  # Nepali
-                    'sa': 'san_Deva',  # Sanskrit
-                    'mni': 'mni_Beng',  # Manipuri (Meitei/Bengali script)
-                    'ks': 'kas_Arab',  # Kashmiri (Arabic script)
-                    'doi': 'doi_Deva',  # Dogri
-                    'kok': 'gom_Deva',  # Konkani
-                    'mai': 'mai_Deva',  # Maithili
-                    'brx': 'brx_Deva',  # Bodo
-                    'sat': 'sat_Olck',  # Santali
-                }
-                
-                # Initialize the model (lazy loading - will load on first translation)
-                self.model = None
-                self.transliterator = None
-            
-            # Initialize transliterator for script conversion
-            try:
-                from indic_transliteration import sanscript
-                self.transliterator_available = True
-            except ImportError:
-                self.transliterator_available = False
-                logger.warning("Indic transliteration not available")
-            
+            # Import transformers pipeline
+            from transformers import pipeline
+
+            # Language code mapping supported in our frontend (en -> indic)
+            self.lang_map = {
+                'en': 'eng_Latn',
+                'hi': 'hin_Deva',
+                'bn': 'ben_Beng',
+                'ta': 'tam_Taml',
+                'te': 'tel_Telu',
+                'kn': 'kan_Knda',
+                'ml': 'mal_Mlym',
+                'mr': 'mar_Deva',
+                'gu': 'guj_Gujr',
+                'pa': 'pan_Guru',
+                'or': 'ory_Orya',
+                'as': 'asm_Beng',
+                'ur': 'urd_Arab',
+                'ne': 'nep_Deva',
+                'sa': 'san_Deva',
+                'mni': 'mni_Beng',
+            }
+
+            # Initialize HF pipeline (download model on first run). Users should login: `huggingface-cli login` or set HUGGING_FACE_HUB_TOKEN
+            self.pipe = pipeline(
+                "translation",
+                model="ai4bharat/indictrans2-en-indic-1B",
+                trust_remote_code=True
+            )
+
             self._initialized = True
             self._model_loading = False
             
             load_time = time.time() - start_time
-            logger.info(f"IndicTrans2 initialized in {load_time:.2f} seconds")
+            logger.info(f"HF Transformers model initialized in {load_time:.2f} seconds")
             
         except Exception as e:
-            logger.exception("Failed to initialize IndicTrans2 model")
+            logger.exception("Failed to initialize HF Transformers model")
             self._initialized = False
             self._model_loading = False
-            raise ModelLoadError(f"Failed to initialize IndicTrans2: {str(e)}")
+            raise ModelLoadError(f"Failed to initialize HF model: {str(e)}")
     
     def _warmup_model(self):
         """Warm up the model with sample translations."""
-        logger.info("Warming up IndicTrans2 model...")
+        logger.info("Warming up HF translation model...")
         warmup_samples = [
             ("Hello, how are you?", "en", "hi"),
             ("This is a test.", "en", "hi"),
@@ -350,7 +300,7 @@ class TranslationService:
         config: Optional[TranslationConfig] = None
     ) -> List[str]:
         """
-        Translate a batch of sentences using IndicTrans2.
+        Translate a batch of sentences using HF Transformers pipeline (en -> indic).
         
         Args:
             sentences: List of sentences to translate
@@ -370,46 +320,25 @@ class TranslationService:
         config = config or TranslationConfig()
         
         try:
-            # Map language codes to IndicTrans2 format
+            # Map language codes to model format
             if src_lang not in self.lang_map:
                 raise TranslationError(f"Source language '{src_lang}' is not supported. Supported languages: {', '.join(self.lang_map.keys())}")
             if tgt_lang not in self.lang_map:
                 raise TranslationError(f"Target language '{tgt_lang}' is not supported. Supported languages: {', '.join(self.lang_map.keys())}")
             
-            src_code = self.lang_map[src_lang]
-            tgt_code = self.lang_map[tgt_lang]
-            
-            # Use IndicTrans2 API if available
-            if hasattr(self, 'use_indictrans2_api') and self.use_indictrans2_api:
-                translated = []
-                for sent in sentences:
-                    result = self.translator.translate(sent, src_lang=src_lang, tgt_lang=tgt_lang)
-                    translated.append(result)
-                return translated
-            
-            # Use IndicTrans2 inference engine
-            if self.model is None:
-                # Lazy load the model
-                from inference.engine import Model
-                model_dir = Path(__file__).parent.parent / "models" / "indic-en"
-                if not model_dir.exists():
-                    model_dir = self.model_dir
-                
-                logger.info(f"Loading IndicTrans2 model from {model_dir}")
-                self.model = Model(src_lang=src_code, tgt_lang=tgt_code, model_dir=str(model_dir))
-            
-            # Translate using IndicTrans2
-            # IndicTrans2 Model.translate expects individual sentences or batch
-            if len(sentences) == 1:
-                translated = self.model.translate(sentences[0], src_lang=src_code, tgt_lang=tgt_code)
-                return [translated] if isinstance(translated, str) else translated
-            else:
-                # Batch translation
-                translated_sentences = []
-                for sent in sentences:
-                    translated = self.model.translate(sent, src_lang=src_code, tgt_lang=tgt_code)
-                    translated_sentences.append(translated if isinstance(translated, str) else translated[0])
-                return translated_sentences
+            # Enforce English source for this model
+            if src_lang != 'en':
+                raise TranslationError("This model supports translations from English (en) to Indic languages only.")
+
+            # Use HF pipeline per sentence
+            results = []
+            for sent in sentences:
+                out = self.pipe(sent, src_lang="eng_Latn", tgt_lang=self.lang_map[tgt_lang])
+                if isinstance(out, list) and len(out) > 0 and 'translation_text' in out[0]:
+                    results.append(out[0]['translation_text'])
+                else:
+                    results.append(sent)
+            return results
             
         except Exception as e:
             logger.exception(f"Batch translation failed: {str(e)}")

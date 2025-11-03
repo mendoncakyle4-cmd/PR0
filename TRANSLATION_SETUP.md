@@ -112,10 +112,15 @@ Additional languages supported by IndicTrans2 backend (available for future use)
 
 ## Integration with Next.js
 
-The Next.js API route (`app/api/translate/route.ts`) automatically connects to the Python service. Make sure:
+The Next.js API route (`app/api/translate/route.ts`) connects to the local Python service for real translations.
 
-1. The Python service is running before starting Next.js dev server
-2. The service URL matches your configuration
+Local development:
+1. Start the Python service: `python services/translation_service.py --http`
+2. Dev server: `npm run dev`
+
+Production (Vercel):
+- The API route includes a fallback translation (placeholder text) when the Python service is not reachable.
+- For full fidelity translations in production, host the Python service and set `TRANSLATION_SERVICE_URL` in Vercel Project → Settings → Environment Variables.
 
 ## Troubleshooting
 
@@ -124,9 +129,9 @@ The Next.js API route (`app/api/translate/route.ts`) automatically connects to t
 - Check logs in `translation_service.log`
 
 ### Model loading fails
-- Ensure models are downloaded in `models/indic-en/`
+- Ensure you've logged in to Hugging Face: `huggingface-cli login` (or set `HUGGING_FACE_HUB_TOKEN`)
 - Check disk space availability
-- Verify IndicTrans2 installation: `python -c "import IndicTrans2"`
+- First run may take time to download weights
 
 ### Slow translations
 - Use GPU if available (CUDA)
@@ -147,6 +152,6 @@ gunicorn -w 2 -b 127.0.0.1:5000 "services.translation_service:app"
 
 ## References
 
-- [IndicTrans2 GitHub](https://github.com/AI4Bharat/IndicTrans2)
-- [AI4Bharat Documentation](https://github.com/AI4Bharat/IndicTrans2#readme)
+- [ai4bharat/indictrans2-en-indic-1B](https://huggingface.co/ai4bharat/indictrans2-en-indic-1B)
+- [Transformers pipeline docs](https://huggingface.co/docs/transformers/main_classes/pipelines)
 
