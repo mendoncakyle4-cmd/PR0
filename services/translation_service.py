@@ -123,14 +123,15 @@ class TranslationService:
         threading.Thread(target=_load_model, daemon=True).start()
     
     def _initialize_model(self):
-        """Initialize the translation model using Hugging Face Transformers pipeline."""
+        """Initialize the translation model using Hugging Face transformers (ai4bharat IndicTrans2)."""
         try:
-            logger.info("Initializing HF Transformers translation model (ai4bharat/indictrans2-en-indic-1B)...")
+            logger.info("Initializing Hugging Face IndicTrans2 translation pipeline...")
             start_time = time.time()
-            # Import transformers pipeline
+            # Import transformers and create pipeline
             from transformers import pipeline
 
-            # Language code mapping supported in our frontend (en -> indic)
+            # Language code mapping (IndicTrans2 uses specific codes)
+            # Mapping from ISO 639-1 codes to IndicTrans2 language_script format
             self.lang_map = {
                 'en': 'eng_Latn',
                 'hi': 'hin_Deva',
@@ -145,33 +146,40 @@ class TranslationService:
                 'or': 'ory_Orya',
                 'as': 'asm_Beng',
                 'ur': 'urd_Arab',
-                'ne': 'nep_Deva',
-                'sa': 'san_Deva',
-                'mni': 'mni_Beng',
+                'ne': 'nep_Deva',  # Nepali
+                'sa': 'san_Deva',  # Sanskrit
+                'mni': 'mni_Beng',  # Manipuri (Meitei/Bengali script)
+                'ks': 'kas_Arab',  # Kashmiri (Arabic script)
+                'doi': 'doi_Deva',  # Dogri
+                'kok': 'gom_Deva',  # Konkani
+                'mai': 'mai_Deva',  # Maithili
+                'brx': 'brx_Deva',  # Bodo
+                'sat': 'sat_Olck',  # Santali
             }
 
-            # Initialize HF pipeline (download model on first run). Users should login: `huggingface-cli login` or set HUGGING_FACE_HUB_TOKEN
-            self.pipe = pipeline(
+            # Create translation pipeline for English -> Indic languages
+            # trust_remote_code enables model-specific translation kwargs (src_lang/tgt_lang)
+            self.pipe_en_to_indic = pipeline(
                 "translation",
                 model="ai4bharat/indictrans2-en-indic-1B",
                 trust_remote_code=True
             )
-
+            
             self._initialized = True
             self._model_loading = False
             
             load_time = time.time() - start_time
-            logger.info(f"HF Transformers model initialized in {load_time:.2f} seconds")
+            logger.info(f"Hugging Face pipeline initialized in {load_time:.2f} seconds")
             
         except Exception as e:
-            logger.exception("Failed to initialize HF Transformers model")
+            logger.exception("Failed to initialize HF IndicTrans2 pipeline")
             self._initialized = False
             self._model_loading = False
-            raise ModelLoadError(f"Failed to initialize HF model: {str(e)}")
+            raise ModelLoadError(f"Failed to initialize HF pipeline: {str(e)}")
     
     def _warmup_model(self):
         """Warm up the model with sample translations."""
-        logger.info("Warming up HF translation model...")
+        logger.info("Warming up HF IndicTrans2 pipeline...")
         warmup_samples = [
             ("Hello, how are you?", "en", "hi"),
             ("This is a test.", "en", "hi"),
@@ -300,7 +308,7 @@ class TranslationService:
         config: Optional[TranslationConfig] = None
     ) -> List[str]:
         """
-        Translate a batch of sentences using HF Transformers pipeline (en -> indic).
+        Translate a batch of sentences using IndicTrans2.
         
         Args:
             sentences: List of sentences to translate
@@ -320,25 +328,29 @@ class TranslationService:
         config = config or TranslationConfig()
         
         try:
-            # Map language codes to model format
+            # Map language codes to HF/IndicTrans2 expected codes
             if src_lang not in self.lang_map:
                 raise TranslationError(f"Source language '{src_lang}' is not supported. Supported languages: {', '.join(self.lang_map.keys())}")
             if tgt_lang not in self.lang_map:
                 raise TranslationError(f"Target language '{tgt_lang}' is not supported. Supported languages: {', '.join(self.lang_map.keys())}")
-            
-            # Enforce English source for this model
-            if src_lang != 'en':
-                raise TranslationError("This model supports translations from English (en) to Indic languages only.")
 
-            # Use HF pipeline per sentence
-            results = []
-            for sent in sentences:
-                out = self.pipe(sent, src_lang="eng_Latn", tgt_lang=self.lang_map[tgt_lang])
-                if isinstance(out, list) and len(out) > 0 and 'translation_text' in out[0]:
-                    results.append(out[0]['translation_text'])
-                else:
-                    results.append(sent)
-            return results
+            src_code = self.lang_map[src_lang]
+            tgt_code = self.lang_map[tgt_lang]
+
+            # Use HF pipeline (supports en -> indic model)
+            if src_lang == 'en':
+                outputs = self.pipe_en_to_indic(
+                    sentences if len(sentences) > 1 else sentences[0],
+                    src_lang=src_code,
+                    tgt_lang=tgt_code
+                )
+                # Normalize outputs to list of strings
+                if isinstance(outputs, list):
+                    return [o.get('translation_text', '') for o in outputs]
+                return [outputs.get('translation_text', '')]
+
+            # For non-English source, return original for now with note
+            return [f"{s} "+"[Non-English source translation requires indic->en model]" for s in sentences]
             
         except Exception as e:
             logger.exception(f"Batch translation failed: {str(e)}")
